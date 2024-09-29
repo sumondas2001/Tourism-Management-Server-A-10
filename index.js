@@ -16,7 +16,7 @@ app.use(express.json());
 
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DV_USER}:${process.env.DV_PASS}@cluster0.3y9ux.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -36,11 +36,24 @@ async function run() {
           const dataBase = client.db('tourismDB');
           const spotCollection = dataBase.collection('allSpots');
 
+          // add Tourists Spot for data base
 
           app.post('/addTouristsSpot', async (req, res) => {
                const newTouristsSpot = req.body;
                console.log(newTouristsSpot)
                const result = await spotCollection.insertOne(newTouristsSpot);
+               res.send(result);
+          });
+
+          app.get('/allTouristsSpot', async (req, res) => {
+               const course = spotCollection.find();
+               const result = await course.toArray();
+               res.send(result)
+          });
+          app.get('/viewDetails/:id', async (req, res) => {
+               const id = req.params.id;
+               const query = { _id: new ObjectId(id) };
+               const result = await spotCollection.findOne(query);
                res.send(result);
           })
 
