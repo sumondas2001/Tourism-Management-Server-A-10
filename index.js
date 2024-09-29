@@ -1,7 +1,14 @@
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 5000;
-require('dotenv').config()
+require('dotenv').config();
+const cors = require('cors');
+
+
+// middleware
+
+app.use(cors());
+app.use(express.json());
 
 
 
@@ -26,8 +33,16 @@ async function run() {
           // Connect the client to the server	(optional starting in v4.7)
           await client.connect();
 
+          const dataBase = client.db('tourismDB');
+          const spotCollection = dataBase.collection('allSpots');
 
 
+          app.post('/addTouristsSpot', async (req, res) => {
+               const newTouristsSpot = req.body;
+               console.log(newTouristsSpot)
+               const result = await spotCollection.insertOne(newTouristsSpot);
+               res.send(result);
+          })
 
 
 
