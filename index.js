@@ -63,6 +63,35 @@ async function run() {
 
                res.send(result);
           });
+          app.get('/allTouristsSpot/:id', async (req, res) => {
+               const id = req.params.id;
+               const query = { _id: new ObjectId(id) };
+               const result = await spotCollection.findOne(query);
+               res.send(result);
+          });
+          app.put('/upDate/:id', async (req, res) => {
+               const id = req.params.id;
+               const filter = { _id: new ObjectId(id) };
+               const options = { upsert: true };
+               const upDateDoc = req.body;
+               const upDate = {
+                    $set: {
+                         photoUrl: upDateDoc.photoUrl,
+                         touristsSpotName: upDateDoc.touristsSpotName,
+                         countryName: upDateDoc.countryName,
+                         location: upDateDoc.location,
+                         userEmail: upDateDoc.userEmail,
+                         shortDescription: upDateDoc.shortDescription,
+                         averageCost: upDateDoc.averageCost,
+                         seasonality: upDateDoc.seasonality,
+                         travelTime: upDateDoc.travelTime,
+                         totalVisitorsPerYear: upDateDoc.totalVisitorsPerYear,
+                         userName: upDateDoc.userName
+                    }
+               };
+               const result = await spotCollection.updateOne(filter, upDate, options);
+               res.send(result)
+          })
 
 
 
