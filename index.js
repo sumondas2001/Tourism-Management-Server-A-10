@@ -55,7 +55,14 @@ async function run() {
                const query = { _id: new ObjectId(id) };
                const result = await spotCollection.findOne(query);
                res.send(result);
-          })
+          });
+          app.get('/myList/:gmail', async (req, res) => {
+               const gmail = req.params.gmail;
+               const query = { userEmail: gmail };
+               const result = await spotCollection.find(query).toArray();
+
+               res.send(result);
+          });
 
 
 
