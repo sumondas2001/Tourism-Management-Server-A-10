@@ -35,6 +35,7 @@ async function run() {
 
           const dataBase = client.db('tourismDB');
           const spotCollection = dataBase.collection('allSpots');
+          const CountriesCollection = dataBase.collection('countryes');
 
           // add Tourists Spot for data base
 
@@ -45,11 +46,24 @@ async function run() {
                res.send(result);
           });
 
+          // Countries
+
+          app.get('/countries', async (req, res) => {
+               const course = CountriesCollection.find();
+               const result = await course.toArray();
+               res.send(result);
+          })
+
           app.get('/allTouristsSpot', async (req, res) => {
                const course = spotCollection.find();
                const result = await course.toArray();
                res.send(result)
           });
+          app.get('/touristsSportsSection', async (req, res) => {
+               const course = spotCollection.find();
+               const result = await course.toArray();
+               res.send(result)
+          })
           app.get('/viewDetails/:id', async (req, res) => {
                const id = req.params.id;
                const query = { _id: new ObjectId(id) };
@@ -63,6 +77,13 @@ async function run() {
 
                res.send(result);
           });
+
+          app.get('/country/:country_Name', async (req, res) => {
+               const country = req.params.country_Name;
+               const query = { countryName: country };
+               const result = await spotCollection.find(query).toArray();
+               res.send(result);
+          })
           app.get('/allTouristsSpot/:id', async (req, res) => {
                const id = req.params.id;
                const query = { _id: new ObjectId(id) };
@@ -98,7 +119,8 @@ async function run() {
                const query = { _id: new ObjectId(id) };
                const result = await spotCollection.deleteOne(query);
                res.send(result);
-          })
+          });
+
 
 
 
@@ -114,9 +136,9 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-     res.send('Coffee making server is running')
+     res.send('Tourism Management server is running')
 });
 
 app.listen(port, () => {
-     console.log(`coffee server running on port : ${port}`)
+     console.log(`Tourism Management server running on port : ${port}`)
 })
